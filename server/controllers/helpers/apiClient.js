@@ -1,10 +1,8 @@
 const rp = require('request-promise');
-// const assign = require('lodash/assign');
 const _ = require('lodash')
 const utils = require('./utils');
 const logger = require('../../logger');
-
-const YELP_BASE_URL = 'https://api.yelp.com/v3';
+const config = require('../../config');
 
 class ApiClient {
     constructor(options) {
@@ -42,9 +40,10 @@ class ApiClient {
             httpOptions = this.httpOptions;
         }
 
-        logger.trace(`Calling: ${httpOptions.uri} ...`);
-        logger.trace(`Headers: ${httpOptions.headers}`);
-        logger.trace(`Body: ${httpOptions.body}`);
+        logger.trace(`Calling: ${JSON.stringify(httpOptions.uri)} ...`);
+        logger.trace(`Headers: ${JSON.stringify(httpOptions.headers)}`);
+        logger.trace(`Body: ${JSON.stringify(httpOptions.body)}`);
+        logger.trace(`QS: ${JSON.stringify(httpOptions.qs)}`);
 
         const isJson = httpOptions.json;
         if (isJson === null || isJson === undefined || !isJson) {
@@ -58,7 +57,7 @@ class ApiClient {
             result = await rp(httpOptions)
         } catch (e) {
             logger.trace('API CALL ERROR:');
-            logger.error(e);
+            logger.error(e.message);
             result = {};
         }
 
@@ -69,10 +68,43 @@ class ApiClient {
     }
 }
 
-class YelpApiClient extends ApiClient {
+exports.YelpApiClient = class YelpApiClient extends ApiClient {
     constructor(options) {
         super(options);
-        this.baseUrl = YELP_BASE_URL;
+        this.baseUrl = config.YELP_BASE_URL;
+    }
+
+    _checkSearchQueries(query) {
+        let term = query.term;
+        let location = query.location;
+        let coord = query.coord;
+
+        if ((_.isString(term) && _.isString(location))) return true;
+        // if ((_.isString(term) && _.isString(location)))
+    }
+
+    searchBusinessess(query) {
+
+        let searchQueries = {
+            term: query.term,
+            type: 'restaurants',
+            sort_by: 'best_match',
+            location: query.location, // TODO: LOCATION REQUIRED
+        }
+
+        let headers = {
+            'Authorization': `Bearer ${config.YELP_API_KEY}`,
+        };
+
+        let options = {
+            uri: `${this.baseUrl}/businesses/search`,
+            method: 'get',
+            headers: headers,
+            qs: searchQueries,
+            json: true,
+        };
+
+        return this.makeCall(options);
     }
 }
 
