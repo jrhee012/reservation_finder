@@ -23,14 +23,14 @@ router.post('/signup', passport.authenticate('local-signup', {
 }));
 
 // GOOGLE AUTH
-router.get(
-    '/auth/google',
-    passport.authenticate('google', {scope: ['profile']})
-);
-router.get(
-    '/auth/google/callback',
-    passport.authenticate('google', { failureRedirect: '/login' }),
-    (req, res) => res.redirect('/login')
-);
+// router.get(
+//     '/auth/google',
+//     passport.authenticate('google', {scope: ['profile']})
+// );
+// router.get(
+//     '/auth/google/callback',
+//     passport.authenticate('google', { failureRedirect: '/login' }),
+//     (req, res) => res.redirect('/login')
+// );
 
 module.exports = router;
