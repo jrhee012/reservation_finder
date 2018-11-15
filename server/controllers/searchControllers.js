@@ -1,7 +1,5 @@
-const api = require('./helpers/api');
-const utils = require('./helpers/utils');
+const api = require('./helpers/apiClient');
 
-exports.search = (req, res) => {
-    api.call(req.body)
+exports.search = async (req, res) => {
     return res.render('pages/search/index');
 }
