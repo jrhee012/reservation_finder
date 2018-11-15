@@ -1,10 +1,20 @@
-const searchRouter = require('./search');
+const express = require('express');
 
-module.exports = server => {
-    server.get('/', (req, res) => {
-        console.log('req body:', req.body);
-        return res.render('pages/home');
-    })
+const router = express.Router();
 
-    searchRouter(server);
-};
+const isLoggedIn = (req, res, next) => {
+
+    // if user is authenticated in the session, carry on
+    if (req.isAuthenticated())
+        return next();
+
+    // if they aren't redirect them to the home page
+    res.redirect('/');
+}
+
+router.use('/api', require('./api'));
+
+router.use('/', require('./login'));
+router.use('/', require('./server'));
+
+module.exports = router;

@@ -7,4 +7,7 @@ module.exports = {
     YELP_BASE_URL: 'https://api.yelp.com/v3',
     YELP_API_KEY: process.env.YELP_API_KEY,
     YELP_CLIENT_ID: process.env.YELP_CLIENT_ID,
+    MONGODB_URI: process.env.MONGODB_URI,
+    GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
+    GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
 };
