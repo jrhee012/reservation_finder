@@ -12,7 +12,11 @@ module.exports = server => {
     server.use(bodyParser.json());
     server.use(bodyParser.urlencoded({ extended: false }));
     server.use(flash());
-    server.use(session({ secret: 'cats' }));
+    server.use(session({
+        secret: 'cats',
+        saveUninitialized: true,
+        resave: false,
+    }));
     server.use(morgan('[:date[iso]] :method :url :status :response-time ms :remote-addr :remote-user'));
     server.use(passport.initialize());
     server.use(passport.session());
