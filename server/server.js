@@ -8,8 +8,21 @@ const config = require('./config');
 mongoose.promise = global.Promise;
 
 // configure Mongoose
-mongoose.connect(config.MONGODB_URI);
-mongoose.set('debug', true);
+// console.log(config.MONGODB_URI)
+// mongoose.connect(config.MONGODB_URI, { useNewUrlParser: true }, err => {
+//     if (err) console.log('err:', err);
+//     console.log(`mongodb connected on: ${config.MONGODB_URI}`);
+// });
+
+try {
+    mongoose.connect(config.MONGODB_URI, { useNewUrlParser: true });
+    console.log(`mongodb connected on: ${config.MONGODB_URI}`);
+    mongoose.set('debug', true);
+    console.log('mongoose `debug` set `true`');
+} catch (e) {
+    console.log(`cannot connect to mongodb on ${config.MONGODB_URI}!`);
+    console.error(e);
+}
 
 const viewsPath = './server/views';
 const publicPath = './server/public';

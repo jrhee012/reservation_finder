@@ -79,15 +79,34 @@ module.exports = passport => {
     // GOOGLE LOGIN ============================================================
     // =========================================================================
 
-    // passport.use(new GoogleStrategy({
-    //     clientID: config.GOOGLE_CLIENT_ID,
-    //     clientSecret: config.GOOGLE_CLIENT_SECRET,
-    //     callbackURL: "http://www.example.com/auth/google/callback"
-    // },
-    //     function (accessToken, refreshToken, profile, cb) {
-    //         Users.findOrCreate({ googleId: profile.id }, function (err, user) {
-    //             return cb(err, user);
-    //         });
-    //     }
-    // ));
+    passport.use(new GoogleStrategy({
+        clientID: config.GOOGLE_CLIENT_ID,
+        clientSecret: config.GOOGLE_CLIENT_SECRET,
+        callbackURL: config.GOOGLE_CALLBACK_URL,
+    },
+        function (accessToken, refreshToken, profile, done) {
+            Users.findOneAndUpdate(
+                { 'google.id': profile.id },
+                {
+                    google: {
+                        id: profile.id,
+                        token: accessToken,
+                        email: profile.email,
+                        name: profile.name,
+                    },
+                },
+                {
+                    new: true,
+                    upsert: true,
+                },
+                function (err, user) {
+                    if (err) {
+                        return done(err);
+                    }
+                    console.log('sssss?');
+                    return done(null, user);
+                }
+            );
+        }
+    ));
 }

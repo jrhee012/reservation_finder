@@ -27,7 +27,7 @@ const UsersSchema = new Schema({
         id: String,
         token: String,
         email: String,
-        name: String,
+        name: Schema.Types.Mixed,
     }
 });
 

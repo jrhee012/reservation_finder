@@ -15,14 +15,9 @@
 
     <main>
         <!-- show any messages that come back with authentication -->
-        <% if (messages.length > 0) { %>
-        <div class="alert alert-danger">
-            <%= messages[0] %>
-        </div>
-        <% } %>
 
         <div class="jumbotron">
-            <h1><span class="fa fa-sign-in"></span> Signup</h1>
+            <h1><i class="fas fa-sign-in-alt"></i> Signup</h1>
 
             <!-- LOGIN FORM -->
             <form action="/signup" method="post">

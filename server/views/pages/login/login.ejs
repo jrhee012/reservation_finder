@@ -14,15 +14,10 @@
 
     <main>
         <!-- show any messages that come back with authentication -->
-        <% if (messages.length > 0) { %>
-        <div class="alert alert-danger">
-            <p><%= messages[0] %></p>
-        </div>
-        <% } %>
 
         <main>
             <div class="jumbotron">
-                <h1><span class="fa fa-sign-in"></span> Login</h1>
+                <h1><i class="fas fa-sign-in-alt"></i> Login</h1>
 
                 <!-- LOGIN FORM -->
                 <form action="/login" method="post">
@@ -40,7 +35,10 @@
 
                 <hr>
 
-                <p>Need an account? <a href="/signup">Signup</a></p>
+                <p>Need an account?
+                    <a href="/signup">Signup</a>
+                    <a href="/login/google" class="btn btn-default"><i class="fab fa-google"></i></a>
+                </p>
                 <p>Or go <a href="/">home</a>.</p>
             </div>
         </main>
