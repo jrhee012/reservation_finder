@@ -46,17 +46,13 @@ const UsersSchema = new Schema({
         full_name: String,
         profile_picture: Schema.Types.Mixed,
     },
-    roles: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Roles',
-        index: true,
-    }],
+    roles: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Roles', index: true }],
     created_at: {
         type: Date,
         default: new Date().toISOString(),
     },
     last_login_at: Date,
-    test: String,
+    // test: String,
 });
 
 // middleware
@@ -89,7 +85,7 @@ const UsersSchema = new Schema({
 //     // next();
 // });
 
-UsersSchema.methods.setPassword = function (password) {
+UsersSchema.methods.setPassword = function(password) {
     this.local.salt = crypto.randomBytes(16).toString('hex');
     this.local.hash = crypto.pbkdf2Sync(
         password,
@@ -100,7 +96,7 @@ UsersSchema.methods.setPassword = function (password) {
     ).toString('hex');
 };
 
-UsersSchema.methods.validatePassword = function (password) {
+UsersSchema.methods.validatePassword = function(password) {
     const hash = crypto.pbkdf2Sync(
         password,
         this.local.salt,
@@ -111,7 +107,7 @@ UsersSchema.methods.validatePassword = function (password) {
     return this.local.hash === hash;
 };
 
-UsersSchema.methods.generateJWT = function () {
+UsersSchema.methods.generateJWT = function() {
     const today = new Date();
     const expirationDate = new Date(today);
     expirationDate.setDate(today.getDate() + 60);
