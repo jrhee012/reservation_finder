@@ -2,7 +2,10 @@ const mongoose = require('mongoose');
 const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
 // const isEmpty = require('lodash/isEmpty');
+const find = require('lodash/find');
+require('./Roles');
 
+const Roles = mongoose.model('Roles');
 const { Schema } = mongoose;
 
 const UsersSchema = new Schema({
@@ -43,8 +46,17 @@ const UsersSchema = new Schema({
         full_name: String,
         profile_picture: Schema.Types.Mixed,
     },
-    created_at: Date,
+    roles: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Roles',
+        index: true,
+    }],
+    created_at: {
+        type: Date,
+        default: new Date().toISOString(),
+    },
     last_login_at: Date,
+    test: String,
 });
 
 // middleware
@@ -60,8 +72,15 @@ const UsersSchema = new Schema({
 //     this.update({}, { $set: { last_login_at: new Date() } });
 // });
 
-// UsersSchema.pre('save', function () {
-//     this.update({}, { $set: { last_login_at: new Date() } });
+// UsersSchema.post('init', async function () {
+//     let roles = await Roles.find({});
+//     let userRole = find(roles, { name: 'user' });
+//     this.roles = [userRole._id];
+//     console.log('aaa', this);
+// });
+
+// UsersSchema.pre('validate', function () {
+//     this.last_login_at = new Date().toISOString();
 // });
 
 // UsersSchema.pre('save', function () {

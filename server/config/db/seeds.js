@@ -31,25 +31,22 @@ const defaultRoles = [
     },
 ];
 
-/**
- * Helper class representing DBSeeder to interact with the database if
- * needed. Should only be accessed by `admin` users.
- *
- * Allowed methods:
- *
- * `removeAll(modelName)`
- *
- * `seed(modelName)`
- *
- * `findAllAndUpdate()`
- *
- * `assignPermissions()`
- *
- * `start()`
- */
 module.exports = class DBSeeder {
     /**
-     * Create an instance of DBSeeder.
+     * Helper class representing DBSeeder to interact with the database if
+     * needed. Should only be accessed by `admin` users.
+     *
+     * Allowed methods:
+     *
+     * `removeAll(modelName)`
+     *
+     * `seed(modelName)`
+     *
+     * `findAllAndUpdate()`
+     *
+     * `assignPermissions()`
+     *
+     * `start()`
      */
     constructor() {
         console.log('starting db initializer!');
@@ -246,7 +243,8 @@ module.exports = class DBSeeder {
      */
     async start() {
         console.log('initializing db seeds...');
-        let results = await this.findAllAndUpdate();
+        // let results = await this.findAllAndUpdate();
+        await this.findAllAndUpdate();
         // console.log(`seed results: ${JSON.stringify(results)}`);
         console.log('db seed finished successfully!');
     }

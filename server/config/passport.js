@@ -8,19 +8,6 @@ const config = require('../config');
 
 const Users = mongoose.model('Users');
 
-// const cbForAuth = function (err, user) {
-//     if (err) {
-//         return done(err);
-//     }
-//     user.last_login_at = new Date().toISOString();
-//     // return done(null, user);
-
-//     user.save(function (err) {
-//         if (err) throw err;
-//         return done(null, user);
-//     });
-// }
-
 module.exports = passport => {
     // used to serialize the user for the session
     passport.serializeUser(function (user, done) {
@@ -40,11 +27,9 @@ module.exports = passport => {
 
     passport.use(new LocalStrategy(
         { passReqToCallback: true },
-        function (req, username, password, done) {
-            Users.findOne({ 'local.username': username }, function (err, user) {
-                if (err) {
-                    return done(err);
-                }
+        async function (req, username, password, done) {
+            try {
+                let user = await Users.findOne({ 'local.username': username });
 
                 if (!user) {
                     return done(null, false, req.flash('error', 'Incorrect username.'));
@@ -54,15 +39,13 @@ module.exports = passport => {
                     return done(null, false, req.flash('error', 'Incorrect password.'));
                 }
 
-                // user.update({}, { $set: { last_login_at: new Date() } });
-                // return done(null, user);
-
                 user.last_login_at = new Date().toISOString();
-                user.save(function (err) {
-                    if (err) throw err;
-                    return done(null, user);
-                });
-            });
+                await user.save();
+                return done(null, user);
+            } catch (e) {
+                console.error(e);
+                return done(e);
+            }
         }
     ));
 
@@ -72,30 +55,26 @@ module.exports = passport => {
 
     passport.use('local-signup', new LocalStrategy(
         { passReqToCallback: true },
-        function (req, username, password, done) {
-            process.nextTick(function () {
-                Users.findOne({ 'local.username': username }, function (err, user) {
-                    if (err) {
-                        return done(err);
-                    }
+        async function (req, username, password, done) {
+            try {
+                let user = await Users.findOne({ 'local.username': username });
 
-                    if (user) {
-                        return done(null, false, req.flash('signupMessage', 'That username is already taken.'));
-                    } else {
-                        let newUser = new Users();
+                if (user) {
+                    return done(null, false, req.flash('signupMessage', 'That username is already taken.'));
+                }
 
-                        newUser.local.username = username;
-                        newUser.local.password = newUser.setPassword(password);
-                        newUser.created_at = new Date().toISOString();
-                        newUser.last_login_at = new Date().toISOString();
+                user = new Users();
+                user.local.username = username;
+                user.local.password = user.setPassword(password);
+                user.created_at = new Date().toISOString();
+                user.last_login_at = new Date().toISOString();
+                await user.save();
 
-                        newUser.save(function (err) {
-                            if (err) throw err;
-                            return done(null, newUser);
-                        });
-                    }
-                });
-            });
+                return done(null, user);
+            } catch (e) {
+                console.error(e);
+                return done(e);
+            }
         })
     );
 
@@ -109,43 +88,33 @@ module.exports = passport => {
             clientSecret: config.GOOGLE_CLIENT_SECRET,
             callbackURL: config.GOOGLE_CALLBACK_URL,
         },
-        function(accessToken, refreshToken, profile, done) {
-            Users.findOneAndUpdate(
-                {
-                    google: {
-                        id: profile.id,
-                    },
-                },
-                {
-                    google: {
+        async function(accessToken, refreshToken, profile, done) {
+            try {
+                let user = await Users.findOne({ 'google.id': profile.id });
+
+                if (!user) {
+                    let googleResp = {
                         id: profile.id,
                         token: accessToken,
                         email: profile.email,
                         name: profile.name,
                         full_profile: profile,
-                    },
-                },
-                {
-                    new: true,
-                    upsert: true,
-                },
-                function (err, user) {
-                    if (err) {
-                        return done(err);
                     }
-
-                    if (user.created_at === null || user.created_at || undefined) {
-                        user.created_at = new Date().toISOString();
-                    }
+                    user = new Users();
+                    user.google = googleResp;
                     user.last_login_at = new Date().toISOString();
-                    // return done(null, user);
 
-                    user.save(function (err) {
-                        if (err) throw err;
-                        return done(null, user);
-                    });
+                    let savedUser = await user.save();
+                    return done(null, savedUser);
                 }
-            );
+                user.last_login_at = new Date().toISOString();
+                await user.save();
+                done(null, user);
+            } catch (e) {
+                console.log('google login error');
+                console.error(e);
+                return done(e);
+            }
         }
     ));
 
@@ -157,18 +126,12 @@ module.exports = passport => {
         clientSecret: config.FACEBOOK_APP_SECRET,
         callbackURL: "https://3dacaee4.ngrok.io/auth/facebook/callback"
     },
-        function (accessToken, refreshToken, profile, done) {
-            console.log('profile:', profile);
-            console.log('token: ', accessToken);
-            console.log('refresh: ', refreshToken);
-            Users.findOneAndUpdate(
-                {
-                    facebook: {
-                        id: profile.id,
-                    },
-                },
-                {
-                    facebook: {
+        async function (accessToken, refreshToken, profile, done) {
+            try {
+                let user = await Users.findOne({ 'facebook.id': profile.id });
+
+                if (!user) {
+                    let fBResp = {
                         id: profile.id,
                         token: accessToken,
                         username: profile.username,
@@ -178,29 +141,22 @@ module.exports = passport => {
                         profileUrl: profile.profileUrl,
                         provider: profile.provider,
                         full_profile: profile,
-                    },
-                },
-                {
-                    new: true,
-                    upsert: true,
-                },
-                function (err, user) {
-                    if (err) {
-                        return done(err);
-                    }
-
-                    if (user.created_at === null || user.created_at || undefined) {
-                        user.created_at = new Date().toISOString();
-                    }
+                    };
+                    user = new Users();
+                    user.facebook = fBResp;
                     user.last_login_at = new Date().toISOString();
-                    // return done(null, user);
 
-                    user.save(function (err) {
-                        if (err) throw err;
-                        return done(null, user);
-                    });
+                    let savedUser = await user.save();
+                    return done(null, savedUser);
                 }
-            );
+                user.last_login_at = new Date().toISOString();
+                await user.save();
+                done(null, user);
+            } catch (e) {
+                console.log('facebook login error');
+                console.error(e);
+                return done(e);
+            }
         }
     ));
 
