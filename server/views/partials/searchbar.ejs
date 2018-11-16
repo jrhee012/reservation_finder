@@ -6,6 +6,7 @@
               <div class="form-group">
                   <label for="query">Search:</label>
                   <input type="text" class="typeahead" name="query" id="query" placeholder="Start typing something to search...">
+                  <input type="text" class="typeahead" name="location" id="location" placeholder="Location...">
                   <button type="submit" class="btn btn-primary">Search</button>
               </div>
           </fieldset>
@@ -17,7 +18,7 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script type="text/javascript" src="/js/typeahead.bundle.js"></script>
 <script>
-  var local = [
+  var localss = [
     { name: 'alpha', value: 'alpha' },
     { name: 'alpha2', value: 'alpha2' },
     { name: 'alpha3', value: 'alpha3' }
@@ -43,6 +44,7 @@
       cb(matches);
     };
   };
+  // restaurant name search box
   $('#query').typeahead({
     minLength: 1,
     highlight: true
@@ -50,7 +52,17 @@
   {
     name: 'location',
     display: 'value',
-    source: substringMatcher(local)
+    source: substringMatcher(localss)
+  });
+  // location search box
+  $('#location').typeahead({
+    minLength: 1,
+    highlight: true
+  },
+  {
+    name: 'location',
+    display: 'value',
+    source: substringMatcher(localss)
   });
   // $('.tt-query').css('background-color','#fff');
 </script>

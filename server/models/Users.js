@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
+const isEmpty = require('lodash/isEmpty');
 
 const { Schema } = mongoose;
 
@@ -30,6 +31,15 @@ const UsersSchema = new Schema({
         name: Schema.Types.Mixed,
     }
 });
+
+// middleware
+// prints local attr after save
+// UsersSchema.post('save', function (doc, next) {
+//     let local = this.local;
+//     console.log('this:', this);
+//     console.log('this.local:', local);
+//     next();
+// });
 
 UsersSchema.methods.setPassword = function (password) {
     this.local.salt = crypto.randomBytes(16).toString('hex');
@@ -74,3 +84,18 @@ UsersSchema.methods.toAuthJSON = function() {
 };
 
 mongoose.model('Users', UsersSchema);
+
+// // Takes 2 parameters: this is an asynchronous post hook
+// schema.post('save', function (doc, next) {
+//     setTimeout(function () {
+//         console.log('post1');
+//         // Kick off the second post hook
+//         next();
+//     }, 10);
+// });
+
+// // Will not execute until the first middleware calls `next()`
+// schema.post('save', function (doc, next) {
+//     console.log('post2');
+//     next();
+// });
