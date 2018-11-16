@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
-const isEmpty = require('lodash/isEmpty');
+// const isEmpty = require('lodash/isEmpty');
 
 const { Schema } = mongoose;
 
@@ -15,8 +15,13 @@ const UsersSchema = new Schema({
     facebook: {
         id: String,
         token: String,
-        name: String,
-        email: String,
+        username: String,
+        displayName: String,
+        name: Schema.Types.Mixed,
+        gender: String,
+        profileUrl: String,
+        provider: String,
+        full_profile: Schema.Types.Mixed,
     },
     twitter: {
         id: String,
@@ -29,7 +34,17 @@ const UsersSchema = new Schema({
         token: String,
         email: String,
         name: Schema.Types.Mixed,
-    }
+        full_profile: Schema.Types.Mixed,
+    },
+    instagram: {
+        id: String,
+        token: String,
+        username: String,
+        full_name: String,
+        profile_picture: Schema.Types.Mixed,
+    },
+    created_at: Date,
+    last_login_at: Date,
 });
 
 // middleware
@@ -39,6 +54,20 @@ const UsersSchema = new Schema({
 //     console.log('this:', this);
 //     console.log('this.local:', local);
 //     next();
+// });
+
+// UsersSchema.pre('update', function () {
+//     this.update({}, { $set: { last_login_at: new Date() } });
+// });
+
+// UsersSchema.pre('save', function () {
+//     this.update({}, { $set: { last_login_at: new Date() } });
+// });
+
+// UsersSchema.pre('save', function () {
+//     this.test = 'test!';
+//     console.log('this: ', this);
+//     // next();
 // });
 
 UsersSchema.methods.setPassword = function (password) {
@@ -84,18 +113,3 @@ UsersSchema.methods.toAuthJSON = function() {
 };
 
 mongoose.model('Users', UsersSchema);
-
-// // Takes 2 parameters: this is an asynchronous post hook
-// schema.post('save', function (doc, next) {
-//     setTimeout(function () {
-//         console.log('post1');
-//         // Kick off the second post hook
-//         next();
-//     }, 10);
-// });
-
-// // Will not execute until the first middleware calls `next()`
-// schema.post('save', function (doc, next) {
-//     console.log('post2');
-//     next();
-// });

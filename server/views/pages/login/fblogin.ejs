@@ -38,7 +38,8 @@
                 <p>Need an account?
                     <a href="/signup">Signup</a>
                     <a href="/login/google" class="btn btn-default"><i class="fab fa-google"></i></a>
-                    <a href="/login/facebook" class="btn btn-default"><i class="fab fa-facebook"></i></a>
+                    <fb:login-button scope="public_profile,email" onlogin="checkLoginState();">
+                    </fb:login-button>
                 </p>
                 <p>Or go <a href="/">home</a>.</p>
             </div>
@@ -48,10 +49,10 @@
     <script>
         window.fbAsyncInit = function () {
             FB.init({
-                appId: '2012456932134016',
+                appId: '{your-app-id}',
                 cookie: true,
                 xfbml: true,
-                version: 'v3.2'
+                version: '{api-version}'
             });
 
             FB.AppEvents.logPageView();
@@ -65,13 +66,6 @@
             js.src = "https://connect.facebook.net/en_US/sdk.js";
             fjs.parentNode.insertBefore(js, fjs);
         }(document, 'script', 'facebook-jssdk'));
-
-        function checkLoginState() {
-            FB.getLoginStatus(function (response) {
-                console.log('fb resp: ', response);
-                statusChangeCallback(response);
-            });
-        }
     </script>
 
     <footer>

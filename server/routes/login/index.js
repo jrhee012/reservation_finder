@@ -3,6 +3,7 @@ const passport = require('passport');
 const router = require('express').Router();
 const loginControllers = require('../../controllers/loginControllers');
 
+router.get('/login/facebook', (req, res) => res.redirect('/auth/facebook'));
 router.get('/login/google', (req, res) => res.redirect('/auth/google'));
 router.get('/login', loginControllers.getLogin);
 router.post('/login', passport.authenticate('local', {
@@ -32,21 +33,22 @@ router.get(
         failureFlash: true,
     }),
     (req, res) => {
-        console.log('!!!!!')
+        // console.log('!!!!!')
         return res.send(200)
     },
 );
+router.get('/auth/google', passport.authenticate('google', {scope: ['profile']}));
+
+// facebook
 router.get(
-    '/auth/google',
-    passport.authenticate('google', {scope: ['profile']})
+    '/auth/facebook/callback',
+    passport.authenticate('facebook', { failureRedirect: '/login' }),
+    (req, res) => {
+        console.log('!!!!!')
+        return res.redirect('/search');
+    },
 );
-// router.get(
-//     '/auth/google/callback',
-//     passport.authenticate('google', {
-//         successRedirect: '/search',
-//         failureRedirect: '/login',
-//         failureFlash: true,
-//     })
-// );
+router.get('/auth/facebook', passport.authenticate('facebook'));
+
 
 module.exports = router;
