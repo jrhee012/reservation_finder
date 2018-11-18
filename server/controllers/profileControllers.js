@@ -21,3 +21,32 @@ exports.getProfile = async (req, res) => {
         return res.redirect('/');
     }
 }
+
+exports.updateProfile = async (req, res) => {
+    try {
+        let user = await utils.getUser(req.session.passport.user);
+        let data = { user: user };
+
+        if (isEmpty(data)) {
+            return res.redirect('/');
+        }
+
+        return res.status(200)
+            .render('pages/profile/update', data);
+    } catch (e) {
+        logger.trace('update profile error');
+        logger.error(e);
+        return res.redirect('/profile/update');
+    }
+}
+
+exports.saveUpdate = async (req, res) => {
+    try {
+        let user = await utils.getUser(req.session.passport.user);
+        await user.update(req.params);
+    } catch (e) {
+        logger.trace('update save error');
+        logger.error(e);
+        return res.redirect('/profile/update');
+    }
+}
