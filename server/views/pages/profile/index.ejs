@@ -1,0 +1,70 @@
+<!doctype html>
+<html>
+
+<head>
+    <% include ../../partials/head %>
+</head>
+
+<body class="container">
+    <header>
+        <% include ../../partials/header %>
+    </header>
+
+    <div class="container">
+        <div class="page-header text-center">
+            <h1><span class="fa fa-anchor"></span> Profile Page</h1>
+            <p>
+                <strong>id</strong>:
+                <%= user._id %><br>
+            <a href="/logout" class="btn btn-default btn-sm">Logout</a>
+        </div>
+
+        <div class="row">
+
+            <!-- LOCAL INFORMATION -->
+            <div class="col-sm-6">
+                <div class="well">
+                    <% if (user.local && user.local.email && user.local.passord) { %>
+                        <h3><span class="fa fa-user"></span> Local</h3>
+                        <% if (user.local.email) { %>
+                            <p>
+                                <strong>email</strong>:
+                                <%= user.local.email %><br>
+                            </p>
+                        <% } %>
+                        <% if (user.local.password) { %>
+                            <p>
+                                <strong>password</strong>:
+                                <%= user.local.password %>
+                            </p>
+                        <% } %>
+                    <% } %>
+                    <% if (user.google) { %>
+                        <h3><i class="fab fa-google"></i> Google</h3>
+                        <p>
+                            <strong>google id</strong>:
+                            <%= user.google.id %><br>
+                        </p>
+                        <% if (user.google.email) { %>
+                            <p>
+                                <strong>google email</strong>:
+                                <%= user.google.email %>
+                            </p>
+                        <% } %>
+                        <p>
+                            <strong>google name</strong>:
+                            <%= user.google.name.givenName %> <%= user.google.name.familyName %>
+                        </p>
+                    <% } %>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <footer>
+        <% include ../../partials/footer %>
+    </footer>
+</body>
+
+</html>

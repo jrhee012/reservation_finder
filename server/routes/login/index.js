@@ -7,7 +7,7 @@ router.get('/login/facebook', (req, res) => res.redirect('/auth/facebook'));
 router.get('/login/google', (req, res) => res.redirect('/auth/google'));
 router.get('/login', loginControllers.getLogin);
 router.post('/login', passport.authenticate('local', {
-    successRedirect: '/',
+    successRedirect: '/profile',
     failureRedirect: '/login',
     failureFlash: true,
 }));
@@ -19,7 +19,7 @@ router.get('/logout', (req, res) => {
 
 router.get('/signup', loginControllers.getSignUp);
 router.post('/signup', passport.authenticate('local-signup', {
-    successRedirect: '/',
+    successRedirect: '/profile',
     failureRedirect: '/signup',
     failureFlash: true,
 }));
@@ -28,7 +28,7 @@ router.post('/signup', passport.authenticate('local-signup', {
 router.get(
     '/auth/google/callback',
     passport.authenticate('google', {
-        successRedirect: '/search',
+        successRedirect: '/profile',
         failureRedirect: '/login',
         failureFlash: true,
     }),
@@ -45,7 +45,7 @@ router.get(
     passport.authenticate('facebook', { failureRedirect: '/login' }),
     (req, res) => {
         console.log('!!!!!')
-        return res.redirect('/search');
+        return res.redirect('/profile');
     },
 );
 router.get('/auth/facebook', passport.authenticate('facebook'));

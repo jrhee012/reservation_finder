@@ -1,8 +1,22 @@
 const mongoose = require('mongoose');
+const isEmpty = require('lodash/isEmpty');
 const utils = require('./helpers/utils');
 const logger = require('../logger');
 
 const Users = mongoose.model('Users');
+
+// const getUser = async userID => {
+//     let user = {};
+//     try {
+//         user = await Users.findById(userID);
+//     } catch (e) {
+//         logger.trace('get user error');
+//         logger.error(e);
+//     }
+//     return user;
+// }
+
+const buildUserAttr = reqParams => '';
 
 exports.getAll = async (req, res) => {
     let check = await utils.checkAdmin(req.session);
@@ -11,20 +25,7 @@ exports.getAll = async (req, res) => {
 }
 
 exports.getOne = async (req, res) => {
-    let userId = req.params.user_id;
-    let user;
-
-    try {
-        user = await Users.findById(userId);
-    } catch (e) {
-        logger.trace('get user error');
-        logger.error(e);
-        return res.status(e.code)
-            .json({
-                code: e.code,
-                message: e.message,
-            })
-    }
+    let user = utils.getUser(req.params.userId);
 
     if (!user) {
         return res.redirect('/users');
@@ -34,7 +35,19 @@ exports.getOne = async (req, res) => {
         .render('pages/users/info', user);
 }
 
-exports.create = async (req, res) => {
+exports.create = async (req, res) => res.render('pages/users/create');
+
+exports.save = async (req, res) => {
+    let userAttrs = buildUserAttr(req.body || req.parms);
+    try {
+        let newUser = await Users.create(userAttrs);
+        return res.redirect(`/users/${newUser.id}`);
+    } catch (e) {
+        logger.trace(`error at ${req.url}`);
+        logger.error(e);
+        // TODO: ??? render form again or redirct ???
+        return res.redirect('/users/create');
+    }
 
 }
 

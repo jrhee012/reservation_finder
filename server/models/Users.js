@@ -2,10 +2,10 @@ const mongoose = require('mongoose');
 const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
 // const isEmpty = require('lodash/isEmpty');
-const find = require('lodash/find');
+// const find = require('lodash/find');
 require('./Roles');
 
-const Roles = mongoose.model('Roles');
+// const Roles = mongoose.model('Roles');
 const { Schema } = mongoose;
 
 const UsersSchema = new Schema({
@@ -47,6 +47,7 @@ const UsersSchema = new Schema({
         profile_picture: Schema.Types.Mixed,
     },
     roles: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Roles', index: true }],
+    saves: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Saves', index: true }],
     created_at: {
         type: Date,
         default: new Date().toISOString(),

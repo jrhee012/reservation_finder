@@ -5,7 +5,7 @@ const passport = require('passport');
 const config = require('./config');
 const logger = require('./logger');
 
-//Configure mongoose's promise to global promise
+// Configure mongoose's promise to global promise
 mongoose.promise = global.Promise;
 
 try {

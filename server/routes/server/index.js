@@ -15,6 +15,7 @@ const isLoggedIn = (req, res, next) => {
 // router.use('/search', isLoggedIn, require('./search'));
 router.use('/search', require('./search'));
 router.use('/users', require('./users'));
+router.use('/profile', require('./profile'));
 
 router.get('/', (req, res) => {
     let data = utils.setSessionUser(req);

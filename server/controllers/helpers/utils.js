@@ -38,3 +38,14 @@ exports.checkAdmin = async reqSession => {
     }
     return false;
 }
+
+exports.getUser = async userID => {
+    let user = {};
+    try {
+        user = await Users.findById(userID);
+    } catch (e) {
+        logger.trace('get user error');
+        logger.error(e);
+    }
+    return user;
+}
