@@ -7,7 +7,7 @@ exports.getProfile = async (req, res) => {
         let user = await utils.getUser(req.session.passport.user);
         let data = { user: user };
 
-        console.log('aaa', data)
+        // console.log('aaa', data)
 
         if (isEmpty(data)) {
             return res.redirect('/');

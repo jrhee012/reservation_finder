@@ -15,4 +15,8 @@ const RawDataSchema = new Schema({
     },
 });
 
+RawDataSchema.pre('validate', function () {
+    this.last_updated = new Date().toISOString();
+});
+
 mongoose.model('RawData', RawDataSchema);

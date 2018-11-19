@@ -20,10 +20,32 @@ const buildErrResp = e => {
     return msg;
 }
 
+const saveYelpData = data => {
+    // console.log('aaaa', data)
+    let rawData = data.businesses;
+    // console.log(rawData)
+    console.log(rawData.length)
+    // for (let i = 0; i < rawData.length; i++) {
+    //     let newEntry = new RawData();
+    //     newEntry.data = newEntry;
+    //     newEntry.save();
+    //     console.log('saved!!!')
+    // }
+    return;
+}
+
 const startProcess = async () => {
     console.log('message received from the main thread!');
-    const source = workerData.source;
-    const data = workerData.data;
+    // console.log(workerData)
+    const source = workerData[0];
+    const data = workerData[1];
+    // console.log('adaaa', source)
+    switch (source) {
+        case 'yelp':
+            return saveYelpData(data);
+        default:
+    }
+
 }
 
 startProcess().then(res => {
