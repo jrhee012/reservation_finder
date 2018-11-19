@@ -20,17 +20,32 @@ const buildErrResp = e => {
     return msg;
 }
 
-const saveYelpData = data => {
+const saveToDb = (data, index) => {
+    if (index.length === data.length) {
+        return;
+    }
+    let entry = data[index];
+    entry.save
+}
+
+const saveYelpData = async (data, index) => {
     // console.log('aaaa', data)
     let rawData = data.businesses;
     // console.log(rawData)
+    let newEntries = [];
     console.log(rawData.length)
-    // for (let i = 0; i < rawData.length; i++) {
-    //     let newEntry = new RawData();
-    //     newEntry.data = newEntry;
-    //     newEntry.save();
-    //     console.log('saved!!!')
-    // }
+    for (let i = 0; i < rawData.length; i++) {
+        let newEntry = new RawData();
+        newEntry.data = rawData[i];
+        // newEntries.push(newEntry);
+        await newEntry.save();
+        console.log('finished!')
+    }
+
+    // (async function () {
+    //     const url = await ngrok.connect();
+    // })();
+
     return;
 }
 
@@ -39,10 +54,13 @@ const startProcess = async () => {
     // console.log(workerData)
     const source = workerData[0];
     const data = workerData[1];
+    // let test = await RawData.find({});
+    // console.log('teetetet', test);
     // console.log('adaaa', source)
     switch (source) {
         case 'yelp':
-            return saveYelpData(data);
+            await saveYelpData(data);
+            return;
         default:
     }
 

@@ -3,7 +3,8 @@ const _ = require('lodash')
 const utils = require('./utils');
 const logger = require('../../logger');
 const config = require('../../config');
-const { SaveRawDataWorker } = require('../../workers');
+const rawData = require('./rawData');
+// const { SaveRawDataWorker } = require('../../workers');
 
 class ApiClient {
     constructor(options) {
@@ -65,8 +66,9 @@ class ApiClient {
         const endTime = new Date();
         utils.logTimeDelta(startTime, endTime);
 
-        let w = new SaveRawDataWorker();
-        w.startWorker('worker_1', 'yelp', result);
+        // let w = new SaveRawDataWorker();
+        // w.startWorker('worker_1', 'yelp', result);
+        rawData.save(result.businesses);
 
         return result;
     }

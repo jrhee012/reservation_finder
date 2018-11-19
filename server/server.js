@@ -39,6 +39,7 @@ require('./middleware')(server);
 
 // requirece routes and models
 require('./models/Users');
+require('./models/RawData');
 
 // pass passport for configuration
 require('./config/passport')(passport);
