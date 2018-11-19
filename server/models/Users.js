@@ -47,7 +47,7 @@ const UsersSchema = new Schema({
         profile_picture: Schema.Types.Mixed,
     },
     roles: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Roles', index: true }],
-    saves: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Saves', index: true }],
+    histories: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Saves', index: true }],
     created_at: {
         type: Date,
         default: new Date().toISOString(),

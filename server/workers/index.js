@@ -1,5 +1,6 @@
 const { Worker, isMainThread, parentPort, workerData } = require('worker_threads');
 
+
 function startWorker(path, cb) {
     let w = new Worker(path, { workerData: null });
     w.on('message', (msg) => {

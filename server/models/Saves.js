@@ -6,8 +6,16 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 const SavesSchema = new Schema({
-    user_id: String,
-    location_info: Schema.Types.Mixed,
+    user_id: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Users',
+        index: true
+    },
+    location_id: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Locations',
+        index: true
+    },
     created_at: {
         type: Date,
         required: true,
